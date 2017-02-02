@@ -4,9 +4,9 @@ import java.io.ObjectOutputStream;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 
-public class KeyGenerator {
+public class KeyGeneratorOld {
 
-	public static final String ALGORITHM = "RSA";
+	public static final String ALGORITHM = "RSAKeyGenerator";
 	public static final String PRIVATE_KEY_FILE = "private.key";
 	public static final String PUBLIC_KEY_FILE = "public.key";
 
@@ -44,7 +44,6 @@ public class KeyGenerator {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public static boolean areKeysPresent() {

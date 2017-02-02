@@ -1,91 +1,77 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-
-import javax.crypto.Cipher;
+import java.io.*;
 
 public class Main {
-	
-	public static final String ALGORITHM = "RSA";
-	public static final String PRIVATE_KEY_FILE = "private.key";
-	public static final String PUBLIC_KEY_FILE = "public.key";
 
-	public static byte[] encrypt(String text, PublicKey key) {
-		byte[] cipherText = null;
-		try {
-			// get an RSA cipher object and print the provider
-			final Cipher cipher = Cipher.getInstance(ALGORITHM);
-			// encrypt the plain text using the public key
-			cipher.init(Cipher.ENCRYPT_MODE, key);
-			cipherText = cipher.doFinal(text.getBytes());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return cipherText;
+	public static void main(String[] args){
+        gui();
 	}
 
-	public static String decrypt(byte[] text, PrivateKey key) {
-		byte[] dectyptedText = null;
-		try {
-			// get an RSA cipher object and print the provider
-			final Cipher cipher = Cipher.getInstance(ALGORITHM);
+	private static void gui() {
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            while (true) {
+                System.out.print("\n(Set)KeyPair, (En)cryption Or (De)crpytion: ");
+                String input = br.readLine();
+                if (inputIsLegal(input)) {
+                    runChoosedOption(input);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-			// decrypt the text using the private key
-			cipher.init(Cipher.DECRYPT_MODE, key);
-			dectyptedText = cipher.doFinal(text);
+	private static boolean inputIsLegal(String inputRaw) {
+        String input = inputRaw.toLowerCase();
+        if (input.equals("set") || input.equals("en") || input.equals("de"))
+            return true;
+        return false;
+    }
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+    private static void runChoosedOption(String input) {
+        if (input.equals("set"))
+            setNewKeyPair();
+        else if (input.equals("en"))
+            encrypt();
+        else
+            decrypt();
+    }
 
-		return new String(dectyptedText);
-	}
+    private static void setNewKeyPair() {
+        System.out.println("Set new Key ...");
+        RSAKeyGenerator newRSAKey = new RSAKeyGenerator();
+        System.out.println("private: " + newRSAKey.getPrivateKey());
+        System.out.println("public: " + newRSAKey.getPublicKey());
+        System.out.println("common N: " + newRSAKey.getN());
+    }
 
+    private static void encrypt() {
+        System.out.println("Encryption Process ...");
+        String recipient = getInput("Give me the Public Key: ");
+        String n = getInput("Give me the Public N: ");
+        Encrypt newEncryption = new Encrypt(recipient,n);
+        String message = getInput("Give me the Message: ");
+        System.out.println(newEncryption.encryptToBigInt(message));
+        System.out.println(newEncryption.encryptToString(message));
+    }
 
-	@SuppressWarnings("resource")
-	public static void main(String[] args) {
+    private static String getInput(String input) {
+        try {
+            System.out.println(input);
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            return br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-		String[] test = {"public.key", "public2.key", "public3.key"};
-		KeyGenerator keyGen = new KeyGenerator();
-		KeyReader keyReader = new KeyReader(test);
-		keyReader.checkKeyClasses();
-		try {
-			// Check if the pair of keys are present else generate those.
-			if (!keyGen.areKeysPresent()) {
-				// Method generates a pair of keys using the RSA algorithm and stores it
-				// in their respective files
-				keyGen.generateKey();
-			}
-
-			final String originalText = "Text to be encrypted ";
-			ObjectInputStream inputStream = null;
-
-			// Encrypt the string using the public key
-			inputStream = new ObjectInputStream(new FileInputStream(PUBLIC_KEY_FILE));
-			final PublicKey publicKey = (PublicKey) inputStream.readObject();
-			final byte[] cipherText = encrypt(originalText, publicKey);
-
-			// Decrypt the cipher text using the private key.
-			inputStream = new ObjectInputStream(new FileInputStream(PRIVATE_KEY_FILE));
-			final PrivateKey privateKey = (PrivateKey) inputStream.readObject();
-			final String plainText = decrypt(cipherText, privateKey);
-
-			// Printing the Original, Encrypted and Decrypted Text
-			System.out.println("Original: " + originalText);
-			System.out.println("Encrypted: " + cipherText.toString());
-			System.out.println("Decrypted: " + plainText);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    private static void decrypt() {
+        System.out.println("Decryption Process");
+        String privateKey = getInput("Give me your Private Key: ");
+        String n = getInput("Give me the Public N: ");
+        Decrypt newDecryption = new Decrypt(privateKey,n);
+        String cypher = getInput("Give me the Cypher: ");
+        System.out.println(newDecryption.decrypt(cypher));
+    }
 }
