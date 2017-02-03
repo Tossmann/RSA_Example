@@ -5,8 +5,8 @@ import java.math.BigInteger;
  */
 public class Decrypt extends CryptionProcess {
 
-    public Decrypt(String publicKey, String n) {
-        super(publicKey,n);
+    public Decrypt(BigInteger publicKey, BigInteger n) {
+        super(publicKey.toString(),n.toString());
     }
 
     public String decrypt(BigInteger cypher) {

@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-//Class to read public keys from everybody and store them
+
 public class KeyReader {
 
 	private HashMap<PublicKey, String> keys = new HashMap<>();
@@ -29,16 +29,16 @@ public class KeyReader {
 		}
 		System.out.println("There are " + this.getKeyAmount() + " key(s) stored");
 	}
-	
+
 	public int getKeyAmount(){
 		return 	keys.size();
 	}
-	
+
 	public void checkKeyClasses(){
 		Iterator it = keys.entrySet().iterator();
 		String[] errorKeys = new String[keys.size()];
 		int index = 0;
-		
+
 		while(it.hasNext()){
 			Map.Entry pair = (Map.Entry)it.next();
 			PublicKey actualKey = (PublicKey) pair.getKey();
