@@ -1,6 +1,7 @@
 import com.sun.deploy.util.ArrayUtil;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -23,6 +24,8 @@ public class KeyChainReader extends KeyChain{
     }
 
     public String readKeyStringsFromFile() {
+
+
         BufferedReader br = null;
         FileReader fr = null;
         try {
@@ -36,7 +39,7 @@ public class KeyChainReader extends KeyChain{
             }
             return wholeKeyChain;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("KeyChain for this name is noch imported");
         } finally {
             try {
                 if (br != null)
