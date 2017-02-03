@@ -9,7 +9,7 @@
 - (6) Encrypt a message with the command "en"
 - (7) Then answer the question with "y" and type as a name "myself"
 - (8) Now type in your Message
-- (9) The Output on the Console is the Cypher, remember this cypbher for later
+- (9) The Output on the Console is the Cypher, remember this cypher for later
 - (10) Exchange the current File "ownKeyChain.txt" with the saved File (from Step 4)
 - (11) Decrypt the message (from Step 9) with the command "de"
 - (12) Copy Paste the Cypher from Step 9
